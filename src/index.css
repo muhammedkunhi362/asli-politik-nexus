@@ -8,15 +8,15 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Base colors - Blue-Gold Theme */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* Base colors - Black & Blue Theme */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
 
     /* Primary - Deep Navy Blue */
     --primary: 222 65% 28%;
@@ -24,38 +24,38 @@ All colors MUST be HSL.
     --primary-light: 222 50% 45%;
     --primary-dark: 222 75% 18%;
 
-    /* Accent - Warm Gold */
-    --accent: 43 96% 56%;
-    --accent-foreground: 222 47% 11%;
-    --accent-light: 43 100% 65%;
-    --accent-dark: 43 90% 45%;
+    /* Accent - Bright Blue */
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 217 100% 70%;
+    --accent-dark: 217 80% 50%;
 
-    /* Secondary - Light Blue */
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    /* Secondary - Dark Gray */
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 65% 28%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 217 91% 60%;
 
     --radius: 0.75rem;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(222, 65%, 28%), hsl(222, 50%, 45%));
-    --gradient-accent: linear-gradient(135deg, hsl(43, 96%, 56%), hsl(43, 100%, 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(222, 75%, 18%), hsl(222, 65%, 28%), hsl(222, 50%, 45%));
+    --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 100%, 70%));
+    --gradient-accent: linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 100%, 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(0, 0%, 0%), hsl(0, 0%, 5%), hsl(217, 91%, 30%));
 
     /* Shadows */
-    --shadow-sm: 0 2px 4px hsl(222 65% 28% / 0.05);
-    --shadow-md: 0 4px 12px hsl(222 65% 28% / 0.1);
-    --shadow-lg: 0 10px 30px hsl(222 65% 28% / 0.15);
-    --shadow-accent: 0 4px 20px hsl(43 96% 56% / 0.3);
+    --shadow-sm: 0 2px 4px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.5);
+    --shadow-lg: 0 10px 30px hsl(0 0% 0% / 0.7);
+    --shadow-accent: 0 4px 20px hsl(217 91% 60% / 0.4);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
