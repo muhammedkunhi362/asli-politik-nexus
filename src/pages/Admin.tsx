@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Pagination } from "@/components/Pagination";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit, Trash2 } from "lucide-react";
+import { LogOut, Plus, Edit, Trash2, Upload } from "lucide-react";
 import { getAllCategories, getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { z } from "zod";
 
@@ -24,7 +24,7 @@ const postSchema = z.object({
   content: z.string().min(1, "Content is required"),
   category: z.string(),
   author_name: z.string().min(1, "Author name is required").max(100, "Author name too long"),
-  featured_image: z.string().url("Invalid URL").or(z.literal("")),
+  featured_image: z.string().optional(),
 });
 
 const Admin = () => {
@@ -34,6 +34,9 @@ const Admin = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<any>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isUploading, setIsUploading] = useState(false);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -145,13 +148,60 @@ const Admin = () => {
       featured_image: "",
     });
     setEditingPost(null);
+    setImageFile(null);
+    setImagePreview("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should be less than 5MB");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select an image file");
+        return;
+      }
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('post-images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('post-images')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      const validated = postSchema.parse(formData);
+      setIsUploading(true);
+      let imageUrl = formData.featured_image;
+
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
+      const validated = postSchema.parse({ ...formData, featured_image: imageUrl });
       
       if (editingPost) {
         updateMutation.mutate({ id: editingPost.id, data: validated });
@@ -161,7 +211,11 @@ const Admin = () => {
     } catch (error) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
+      } else {
+        toast.error("Failed to upload image");
       }
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -176,6 +230,7 @@ const Admin = () => {
       author_name: post.author_name,
       featured_image: post.featured_image || "",
     });
+    setImagePreview(post.featured_image || "");
     setIsDialogOpen(true);
   };
 
@@ -282,17 +337,38 @@ const Admin = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="image">Featured Image URL</Label>
-                  <Input
-                    id="image"
-                    type="url"
-                    value={formData.featured_image}
-                    onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
-                  />
+                  <Label htmlFor="image">Featured Image</Label>
+                  <div className="space-y-2">
+                    <Input
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="cursor-pointer"
+                    />
+                    {imagePreview && (
+                      <div className="relative w-full h-48 border rounded-lg overflow-hidden">
+                        <img 
+                          src={imagePreview} 
+                          alt="Preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Upload an image (max 5MB) or leave empty
+                    </p>
+                  </div>
                 </div>
-                <Button type="submit" className="w-full">
-                  {editingPost ? "Update Post" : "Create Post"}
+                <Button type="submit" className="w-full" disabled={isUploading}>
+                  {isUploading ? (
+                    <>
+                      <Upload className="mr-2 h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    editingPost ? "Update Post" : "Create Post"
+                  )}
                 </Button>
               </form>
             </DialogContent>

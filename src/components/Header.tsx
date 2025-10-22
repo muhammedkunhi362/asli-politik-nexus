@@ -3,19 +3,18 @@ import { Search, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { categories } from "@/lib/categories";
+import blogLogo from "@/assets/blog-logo.png";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full bg-background">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-gradient-primary rounded-lg p-2">
-              <h1 className="text-xl font-bold text-primary-foreground">AP</h1>
-            </div>
-            <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+        <div className="flex h-24 items-center justify-between">
+          <Link to="/" className="flex items-center space-x-3">
+            <img src={blogLogo} alt="Asli Politik" className="h-12 w-12 object-contain" />
+            <span className="text-4xl font-bold bg-gradient-to-r from-accent-light via-accent to-accent-dark bg-clip-text text-transparent">
               Asli Politik
             </span>
           </Link>
