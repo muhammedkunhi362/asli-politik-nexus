@@ -12,11 +12,8 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full bg-background">
       <div className="container mx-auto px-4">
         <div className="flex h-24 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3">
-            <img src={blogLogo} alt="Asli Politik" className="h-12 w-12 object-contain" />
-            <span className="text-4xl font-bold bg-gradient-to-r from-accent-light via-accent to-accent-dark bg-clip-text text-transparent">
-              Asli Politik
-            </span>
+          <Link to="/" className="flex items-center">
+            <img src={blogLogo} alt="Asli Politik Logo" className="h-20 w-20 object-contain" />
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
