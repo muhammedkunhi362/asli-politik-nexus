@@ -39,12 +39,12 @@ const Home = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
-        <section className="bg-gradient-hero text-primary-foreground py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">Asli Politik</h1>
-            <p className="text-xl md:text-2xl text-primary-foreground/90">
-              Insightful Political Analysis & Geopolitical Commentary
-            </p>
+        <section className="bg-gradient-hero py-20">
+          <div className="container mx-auto px-4">
+            <h1 className="text-[120px] leading-tight font-serif font-bold text-foreground">
+              Insightful Political Analysis &<br />
+              Geopolitical Commentary
+            </h1>
           </div>
         </section>
 
