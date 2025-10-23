@@ -99,11 +99,30 @@ export default {
             transform: "translateY(0)"
           }
         },
+        "fade-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(30px)"
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 1.5s ease-out",
+        "fade-up": "fade-up 0.6s ease-out forwards",
+        "fade-up-delay-1": "fade-up 0.6s ease-out 0.1s forwards",
+        "fade-up-delay-2": "fade-up 0.6s ease-out 0.2s forwards",
+        "fade-up-delay-3": "fade-up 0.6s ease-out 0.3s forwards",
+        "fade-up-delay-4": "fade-up 0.6s ease-out 0.4s forwards",
+        "fade-up-delay-5": "fade-up 0.6s ease-out 0.5s forwards",
+        "fade-up-delay-6": "fade-up 0.6s ease-out 0.6s forwards",
+        "fade-up-delay-7": "fade-up 0.6s ease-out 0.7s forwards",
+        "fade-up-delay-8": "fade-up 0.6s ease-out 0.8s forwards",
       },
     },
   },

@@ -64,18 +64,22 @@ const Home = () => {
           ) : postsData?.posts && postsData.posts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {postsData.posts.map((post) => (
-                  <PostCard
+                {postsData.posts.map((post, index) => (
+                  <div
                     key={post.id}
-                    id={post.id}
-                    title={post.title}
-                    slug={post.slug}
-                    excerpt={post.excerpt}
-                    featuredImage={post.featured_image || undefined}
-                    category={post.category}
-                    authorName={post.author_name}
-                    publishedAt={post.published_at}
-                  />
+                    className={`opacity-0 animate-fade-up-delay-${index % 9}`}
+                  >
+                    <PostCard
+                      id={post.id}
+                      title={post.title}
+                      slug={post.slug}
+                      excerpt={post.excerpt}
+                      featuredImage={post.featured_image || undefined}
+                      category={post.category}
+                      authorName={post.author_name}
+                      publishedAt={post.published_at}
+                    />
+                  </div>
                 ))}
               </div>
               {totalPages > 1 && (
