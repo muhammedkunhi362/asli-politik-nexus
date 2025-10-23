@@ -64,23 +64,36 @@ const Home = () => {
           ) : postsData?.posts && postsData.posts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {postsData.posts.map((post, index) => (
-                  <div
-                    key={post.id}
-                    className={`opacity-0 animate-fade-up-delay-${index % 9}`}
-                  >
-                    <PostCard
-                      id={post.id}
-                      title={post.title}
-                      slug={post.slug}
-                      excerpt={post.excerpt}
-                      featuredImage={post.featured_image || undefined}
-                      category={post.category}
-                      authorName={post.author_name}
-                      publishedAt={post.published_at}
-                    />
-                  </div>
-                ))}
+                {postsData.posts.map((post, index) => {
+                  const delays = [
+                    'animate-fade-up',
+                    'animate-fade-up-delay-1',
+                    'animate-fade-up-delay-2',
+                    'animate-fade-up-delay-3',
+                    'animate-fade-up-delay-4',
+                    'animate-fade-up-delay-5',
+                    'animate-fade-up-delay-6',
+                    'animate-fade-up-delay-7',
+                    'animate-fade-up-delay-8',
+                  ];
+                  return (
+                    <div
+                      key={post.id}
+                      className={`opacity-0 ${delays[index % 9]}`}
+                    >
+                      <PostCard
+                        id={post.id}
+                        title={post.title}
+                        slug={post.slug}
+                        excerpt={post.excerpt}
+                        featuredImage={post.featured_image || undefined}
+                        category={post.category}
+                        authorName={post.author_name}
+                        publishedAt={post.published_at}
+                      />
+                    </div>
+                  );
+                })}
               </div>
               {totalPages > 1 && (
                 <Pagination
