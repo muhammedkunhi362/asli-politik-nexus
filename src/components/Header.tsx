@@ -65,35 +65,37 @@ export const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden transition-transform duration-300 hover:scale-110"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <span className="text-xl">{isMenuOpen ? "✕" : "☰"}</span>
+            <span className={`text-xl transition-transform duration-300 inline-block ${isMenuOpen ? 'rotate-90' : 'rotate-0'}`}>
+              {isMenuOpen ? "✕" : "☰"}
+            </span>
           </Button>
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-4 border-t border-border">
-            <div>
+          <div className="md:hidden py-4 space-y-4 border-t border-border animate-fade-in">
+            <div className="animate-fade-up">
               <p className="text-sm font-bold text-muted-foreground mb-2">Geopolitics</p>
               {categories.geopolitics.subcategories.map((cat) => (
                 <Link
                   key={cat.value}
                   to={`/category/${cat.value}`}
-                  className="block text-sm py-2 pl-4"
+                  className="block text-sm py-2 pl-4 hover:bg-secondary transition-colors rounded-md"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {cat.label}
                 </Link>
               ))}
             </div>
-            <div>
+            <div className="animate-fade-up-delay-1">
               <p className="text-sm font-bold text-muted-foreground mb-2">India</p>
               {categories.india.subcategories.map((cat) => (
                 <Link
                   key={cat.value}
                   to={`/category/${cat.value}`}
-                  className="block text-sm py-2 pl-4"
+                  className="block text-sm py-2 pl-4 hover:bg-secondary transition-colors rounded-md"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {cat.label}
@@ -102,14 +104,14 @@ export const Header = () => {
             </div>
             <Link
               to="/search"
-              className="block text-sm font-medium py-2"
+              className="block text-sm font-medium py-2 hover:bg-secondary transition-colors rounded-md animate-fade-up-delay-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Search
             </Link>
             <Button 
               size="sm"
-              className="w-full bg-foreground text-background hover:bg-primary rounded-full"
+              className="w-full bg-foreground text-background hover:bg-primary rounded-full transition-all animate-fade-up-delay-3"
             >
               Get started
             </Button>
