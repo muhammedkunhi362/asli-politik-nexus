@@ -11,7 +11,7 @@ export const Header = () => {
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-serif font-bold text-foreground">Asli Politik</span>
+            <span className="text-2xl font-black text-red-600" style={{ fontFamily: "'Lilita One', 'Fredoka One', 'Rubik Mono One', cursive, sans-serif", letterSpacing: '-0.02em' }}>AsliPolitik</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
