@@ -57,11 +57,13 @@ export const Header = () => {
             <Link to="/about" className="text-sm font-sans transition-colors hover:text-foreground text-muted-foreground">
               About Us
             </Link>
-            <Link to="/search" className="text-sm font-sans transition-colors hover:text-foreground text-muted-foreground">
-              Search
+            <Link to="/search" className="flex items-center gap-2 px-4 py-2 bg-background rounded-full border border-border hover:border-foreground transition-colors">
+              <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span className="text-sm font-sans text-muted-foreground">Search</span>
             </Link>
           </nav>
-
           <Button
             variant="ghost"
             size="icon"
