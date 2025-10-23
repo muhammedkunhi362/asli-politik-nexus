@@ -1,37 +1,16 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 
 export const Footer = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check if dark mode is active
-    const checkDarkMode = () => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    };
-    
-    checkDarkMode();
-    
-    // Create observer to watch for dark mode changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-    
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <footer className="border-t bg-muted/40 mt-auto">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              <span style={{ color: isDarkMode ? '#ef4444' : '#dc2626' }}>Asli</span>
-              <span style={{ color: isDarkMode ? '#f3f4f6' : '#000000' }}>Politik</span>
+              <span style={{ color: '#dc2626' }}>Asli</span>
+              <span style={{ color: '#000000' }}>Politik</span>
             </span>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-2">
               Insightful political analysis and geopolitical commentary.
             </p>
           </div>
