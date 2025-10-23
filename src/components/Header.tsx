@@ -28,7 +28,7 @@ export const Header = () => {
                     <Link
                       key={cat.value}
                       to={`/category/${cat.value}`}
-                      className="block px-4 py-2 text-sm rounded-md hover:bg-secondary transition-colors"
+                      className="block px-4 py-2 text-sm rounded-md hover:bg-primary transition-colors"
                     >
                       {cat.label}
                     </Link>
