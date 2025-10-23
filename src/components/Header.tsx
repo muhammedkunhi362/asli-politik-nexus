@@ -111,12 +111,11 @@ export const Header = () => {
             >
               About Us
             </Link>
-            <Link
-              to="/search"
-              className="block text-sm font-medium py-2 hover:bg-secondary transition-colors rounded-md animate-fade-up-delay-3"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Search
+            <Link to="/search" className="flex items-center gap-2 px-4 py-2 bg-background rounded-full border border-border hover:border-foreground transition-colors">
+              <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span className="text-sm font-sans text-muted-foreground">Search</span>
             </Link>
           </div>
         )}
