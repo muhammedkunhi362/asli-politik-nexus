@@ -1,19 +1,44 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { categories } from "@/lib/categories";
+import { Moon, Sun } from "lucide-react";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border">
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
-              <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               <span style={{ color: '#dc2626' }}>Asli</span>
-              <span style={{ color: '#000000' }}>Politik</span>
+              <span style={{ color: isDarkMode ? '#ffffff' : '#000000' }}>Politik</span>
             </span>
           </Link>
 
@@ -58,10 +83,17 @@ export const Header = () => {
               Search
             </Link>
             <Button 
+              variant="ghost"
               size="sm"
-              className="bg-foreground text-background hover:bg-primary rounded-full px-4 font-sans"
+              onClick={toggleDarkMode}
+              className="rounded-full p-2 hover:bg-secondary"
+              aria-label="Toggle dark mode"
             >
-              Get started
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-foreground" />
+              ) : (
+                <Moon className="h-5 w-5 text-foreground" />
+              )}
             </Button>
           </nav>
 
@@ -113,10 +145,22 @@ export const Header = () => {
               Search
             </Link>
             <Button 
+              variant="ghost"
               size="sm"
-              className="w-full bg-foreground text-background hover:bg-primary rounded-full transition-all animate-fade-up-delay-3"
+              onClick={toggleDarkMode}
+              className="w-full rounded-full transition-all animate-fade-up-delay-3 flex items-center justify-center gap-2"
             >
-              Get started
+              {isDarkMode ? (
+                <>
+                  <Sun className="h-5 w-5" />
+                  <span>Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-5 w-5" />
+                  <span>Dark Mode</span>
+                </>
+              )}
             </Button>
           </div>
         )}
