@@ -45,7 +45,7 @@ const Home = () => {
               Insightful Political Analysis &<br />
               Geopolitical Commentary
             </h1>
-            <p className="mt-6 text-base md:text-lg text-light-white-200 max-w-3xl animate-fade-in">
+            <p className="mt-6 text-base md:text-lg text-black-200 max-w-3xl animate-fade-in">
               More than just politics! We discuss everything. From Geopolitics to regional political dynamics, Economy, Society and so on. Stay Informed and Build your perspective. Follow us.
             </p>
             <div className="flex items-center gap-4 mt-4 animate-fade-in">
