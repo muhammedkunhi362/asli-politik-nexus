@@ -54,6 +54,9 @@ export const Header = () => {
                 </div>
               </div>
             </div>
+            <Link to="/about" className="text-sm font-sans transition-colors hover:text-foreground text-muted-foreground">
+              About Us
+            </Link>
             <Link to="/search" className="text-sm font-sans transition-colors hover:text-foreground text-muted-foreground">
               Search
             </Link>
@@ -100,8 +103,15 @@ export const Header = () => {
               ))}
             </div>
             <Link
-              to="/search"
+              to="/about"
               className="block text-sm font-medium py-2 hover:bg-secondary transition-colors rounded-md animate-fade-up-delay-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About Us
+            </Link>
+            <Link
+              to="/search"
+              className="block text-sm font-medium py-2 hover:bg-secondary transition-colors rounded-md animate-fade-up-delay-3"
               onClick={() => setIsMenuOpen(false)}
             >
               Search
