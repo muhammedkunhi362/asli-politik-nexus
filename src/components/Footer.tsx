@@ -27,10 +27,10 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-4" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               <span style={{ color: isDarkMode ? '#ef4444' : '#dc2626' }}>Asli</span>
               <span style={{ color: isDarkMode ? '#f3f4f6' : '#000000' }}>Politik</span>
-            </h3>
+            </span>
             <p className="text-sm text-muted-foreground">
               Insightful political analysis and geopolitical commentary.
             </p>
