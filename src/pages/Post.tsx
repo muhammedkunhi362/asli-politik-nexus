@@ -8,9 +8,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, User, Share2 } from "lucide-react";
 import { getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { format } from "date-fns";
+import { useEffect } from "react";
 
 const Post = () => {
   const { slug } = useParams<{ slug: string }>();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   const { data: post, isLoading } = useQuery({
     queryKey: ["post", slug],
