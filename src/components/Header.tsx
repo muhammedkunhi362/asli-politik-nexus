@@ -11,8 +11,8 @@ export const Header = () => {
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", letterSpacing: '0.05em' }}>
-              <span style={{ color: '#dc2626' }}>Asli</span>
+            <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span style={{ color: '#dc2626' }}>ASLI</span>
               <span style={{ color: '#000000' }}>POLITIK</span>
             </span>
           </Link>
