@@ -6,31 +6,11 @@ import { Footer } from "@/components/Footer";
 import { PostCard } from "@/components/PostCard";
 import { Pagination } from "@/components/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { getCategoryLabel, type CategoryValue } from "@/lib/categories";
-import { format } from "date-fns";
-import { Calendar, User } from "lucide-react";
 
 const POSTS_PER_PAGE = 9;
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
-
-  const { data: featuredPost, isLoading: isFeaturedLoading } = useQuery({
-    queryKey: ["featured-post"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .order("published_at", { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-  });
 
   const { data: postsData, isLoading } = useQuery({
     queryKey: ["posts", currentPage],
@@ -42,13 +22,13 @@ const Home = () => {
         .from("posts")
         .select("*", { count: "exact" })
         .order("published_at", { ascending: false })
-        .range(from + 1, to + 1);
+        .range(from, to);
 
       if (error) throw error;
 
       return {
         posts: data || [],
-        totalCount: count ? count - 1 : 0,
+        totalCount: count || 0,
       };
     },
   });
@@ -96,53 +76,6 @@ const Home = () => {
         </section>
 
         <section className="container mx-auto px-4 py-12">
-          <h2 className="text-3xl font-bold mb-8">Featured Post</h2>
-          {/* Featured Post */}
-          {isFeaturedLoading ? (
-            <div className="mb-12 animate-fade-in">
-              <Skeleton className="h-96 w-full rounded-lg mb-4" />
-              <Skeleton className="h-8 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-          ) : featuredPost ? (
-            <Link
-              to={`/post/${featuredPost.slug}`}
-              className="block mb-12 group animate-fade-in"
-            >
-              <div className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-[1.02]">
-                {featuredPost.featured_image && (
-                  <img
-                    src={featuredPost.featured_image}
-                    alt={featuredPost.title}
-                    className="w-full h-96 object-cover"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                  <Badge className="mb-3 bg-primary text-primary-foreground">
-                    {getCategoryLabel(featuredPost.category as CategoryValue)}
-                  </Badge>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-3 group-hover:text-primary transition-colors">
-                    {featuredPost.title}
-                  </h2>
-                  <p className="text-white/90 text-lg mb-4 line-clamp-2">
-                    {featuredPost.excerpt}
-                  </p>
-                  <div className="flex items-center gap-4 text-white/80 text-sm">
-                    <span className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      {featuredPost.author_name}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {format(new Date(featuredPost.published_at), "MMMM dd, yyyy")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ) : null}
-
           <h2 className="text-3xl font-bold mb-8">Latest Articles</h2>
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
