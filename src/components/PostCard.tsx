@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Calendar, User } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { format } from "date-fns";
@@ -26,39 +25,41 @@ export const PostCard = ({
   publishedAt,
 }: PostCardProps) => {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300">
-      <Link to={`/post/${slug}`}>
+    <Link
+      to={`/post/${slug}`}
+      className="block group"
+    >
+      <div className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-[1.02] h-80">
         {featuredImage && (
-          <div className="overflow-hidden h-48">
-            <img
-              src={featuredImage}
-              alt={title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
+          <img
+            src={featuredImage}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
         )}
-        <CardHeader>
-          <Badge className="w-fit mb-2 bg-accent text-accent-foreground hover:bg-accent/90">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+          <Badge className="mb-2 bg-primary text-primary-foreground">
             {getCategoryLabel(category)}
           </Badge>
-          <h3 className="text-xl font-bold line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {title}
           </h3>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground line-clamp-3">{excerpt}</p>
-        </CardContent>
-        <CardFooter className="flex items-center gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <User className="h-4 w-4" />
-            {authorName}
-          </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            {format(new Date(publishedAt), "MMM dd, yyyy")}
-          </span>
-        </CardFooter>
-      </Link>
-    </Card>
+          <p className="text-white/90 text-sm mb-3 line-clamp-2">
+            {excerpt}
+          </p>
+          <div className="flex items-center gap-3 text-white/80 text-xs">
+            <span className="flex items-center gap-1">
+              <User className="h-3 w-3" />
+              {authorName}
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {format(new Date(publishedAt), "MMM dd, yyyy")}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
