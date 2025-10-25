@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Pagination } from "@/components/Pagination";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit, Trash2, Upload } from "lucide-react";
+import { LogOut, Plus, Edit, Trash2, Upload, Mail, CheckCircle2 } from "lucide-react";
 import { getAllCategories, getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { z } from "zod";
 
@@ -35,7 +35,7 @@ const postSchema = z.object({
 const sendNewPostNotification = async (postData: any) => {
   console.log('📧 Attempting to send notification...', {
     url: GOOGLE_APPS_SCRIPT_URL,
-    data: postData
+    timestamp: new Date().toISOString()
   });
 
   try {
@@ -50,22 +50,26 @@ const sendNewPostNotification = async (postData: any) => {
       published_at: new Date().toISOString(),
     };
 
-    console.log('📦 Payload:', payload);
+    console.log('📦 Payload:', JSON.stringify(payload, null, 2));
 
-    // Try with no-cors first (required for Google Apps Script)
+    // Send request to Google Apps Script
     const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
+      mode: 'no-cors', // Required for Google Apps Script
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     });
 
-    console.log('✅ Request sent (no-cors mode - cannot read response)');
+    console.log('✅ Notification request sent successfully');
+    console.log('ℹ️ Note: Due to no-cors mode, response status cannot be verified');
+    console.log('ℹ️ Check Google Apps Script execution logs for confirmation');
     
-    // With no-cors, we assume success if no error is thrown
-    return { success: true };
+    return { 
+      success: true,
+      message: 'Notification request sent (check Apps Script logs for confirmation)'
+    };
   } catch (error) {
     console.error('❌ Error sending notification:', error);
     throw error;
@@ -82,6 +86,10 @@ const Admin = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
+  const [lastNotificationStatus, setLastNotificationStatus] = useState<{
+    sent: boolean;
+    timestamp: string;
+  } | null>(null);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -143,16 +151,46 @@ const Admin = () => {
       
       // Send notification to subscribers
       try {
-        console.log('🚀 Triggering notification send...');
-        const loadingToast = toast.loading("Sending notifications to subscribers...");
+        console.log('🚀 Starting email notification process...');
+        const loadingToastId = toast.loading("Sending email notifications to subscribers...");
         
-        await sendNewPostNotification(postData);
+        const result = await sendNewPostNotification(postData);
         
-        toast.dismiss(loadingToast);
-        toast.success("✅ Notification request sent! (Check browser console for details)");
+        toast.dismiss(loadingToastId);
+        
+        if (result.success) {
+          setLastNotificationStatus({
+            sent: true,
+            timestamp: new Date().toISOString()
+          });
+          toast.success(
+            <div className="flex items-start gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
+              <div>
+                <p className="font-semibold">Email notifications sent!</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Check Google Apps Script logs to verify delivery
+                </p>
+              </div>
+            </div>,
+            { duration: 5000 }
+          );
+        }
       } catch (error) {
         console.error('❌ Notification error:', error);
-        toast.error("Post created but failed to send notifications. Check console for details.");
+        setLastNotificationStatus({
+          sent: false,
+          timestamp: new Date().toISOString()
+        });
+        toast.error(
+          <div>
+            <p className="font-semibold">Post created but email notifications failed</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Check browser console (F12) and Apps Script logs
+            </p>
+          </div>,
+          { duration: 6000 }
+        );
       }
       
       setIsDialogOpen(false);
@@ -314,15 +352,75 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded">
-          <p className="font-semibold">📧 Email Notifications Info:</p>
-          <p className="text-sm mt-1">
-            Google Apps Script URL is configured. Check the browser console (F12) for detailed notification logs.
-          </p>
-          <p className="text-xs mt-2 font-mono bg-blue-100 p-2 rounded">
-            {GOOGLE_APPS_SCRIPT_URL}
-          </p>
+        {/* Email Notification Status Banner */}
+        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start gap-3">
+            <Mail className="h-5 w-5 text-blue-600 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-semibold text-blue-900">📧 Email Notifications Setup</p>
+              <p className="text-sm text-blue-700 mt-1">
+                Google Apps Script URL is configured. When you create a new post, email notifications will be sent to all subscribers.
+              </p>
+              <div className="mt-2 p-2 bg-white/50 rounded border border-blue-100">
+                <p className="text-xs font-mono text-blue-800 break-all">
+                  {GOOGLE_APPS_SCRIPT_URL}
+                </p>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                <a 
+                  href="https://script.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline"
+                >
+                  → Open Apps Script Console
+                </a>
+                <span className="text-blue-400">|</span>
+                <button
+                  onClick={() => {
+                    console.log('Google Apps Script URL:', GOOGLE_APPS_SCRIPT_URL);
+                    console.log('Press F12 to open Developer Console for detailed logs');
+                  }}
+                  className="text-blue-600 hover:text-blue-800 underline"
+                >
+                  → View Console Logs
+                </button>
+              </div>
+              {lastNotificationStatus && (
+                <div className="mt-3 p-2 bg-white rounded border border-blue-100">
+                  <p className="text-xs text-blue-700">
+                    <strong>Last notification:</strong>{' '}
+                    {lastNotificationStatus.sent ? '✅ Sent' : '❌ Failed'} at{' '}
+                    {new Date(lastNotificationStatus.timestamp).toLocaleString()}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Setup Instructions Card */}
+        <Card className="mb-6 border-amber-200 bg-amber-50">
+          <CardHeader>
+            <CardTitle className="text-amber-900 flex items-center gap-2">
+              <span>⚙️</span> Quick Setup Guide
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-amber-800 space-y-2">
+            <p><strong>Spreadsheet Structure:</strong></p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Sheet name: <code className="bg-amber-100 px-1 rounded">Subscribers</code></li>
+              <li>Column A: <strong>Name</strong> (e.g., John Doe)</li>
+              <li>Column B: <strong>Email</strong> (e.g., john@gmail.com)</li>
+              <li>Start data from Row 2 (Row 1 is for headers)</li>
+            </ul>
+            <p className="mt-3"><strong>Deployment:</strong></p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Deploy as Web App with "Who has access" set to <strong>Anyone</strong></li>
+              <li>Grant all required permissions when prompted</li>
+            </ul>
+          </CardContent>
+        </Card>
         
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold">Manage Posts</h2>
@@ -338,7 +436,7 @@ const Admin = () => {
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{editingPost ? "Edit Post" : "Create New Post"}</DialogTitle>
+                <DialogTitle>{editingPost ? "Edit Post" : "Create New Post & Notify Subscribers"}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -431,14 +529,31 @@ const Admin = () => {
                     </p>
                   </div>
                 </div>
+                
+                {!editingPost && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <Mail className="h-4 w-4 text-blue-600 mt-0.5" />
+                      <p className="text-xs text-blue-700">
+                        <strong>Note:</strong> Creating this post will automatically send email notifications to all subscribers in your Google Sheet.
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
                 <Button type="submit" className="w-full" disabled={isUploading}>
                   {isUploading ? (
                     <>
                       <Upload className="mr-2 h-4 w-4 animate-spin" />
                       Uploading...
                     </>
+                  ) : editingPost ? (
+                    "Update Post"
                   ) : (
-                    editingPost ? "Update Post" : "Create Post & Notify Subscribers"
+                    <>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Create Post & Notify Subscribers
+                    </>
                   )}
                 </Button>
               </form>
