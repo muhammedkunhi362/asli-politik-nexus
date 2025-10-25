@@ -50,7 +50,7 @@ const Home = () => {
               Geopolitical Commentary
             </h1>
             <p className="mt-4 text-base md:text-lg text-black-200 max-w-3xl animate-fade-in">
-              More than just politics! We discuss everything. From Geopolitics to regional political dynamics, Economy, Society and so on. Stay Informed and Build your perspective. Follow us.
+              More than just politics! We discuss everything. From Geopolitics to regional political dynamics, Economy, Society and so on. Stay Informed and Build your perspective. Follow us and Join Our Community.
             </p>
             <div className="flex items-center gap-4 mt-3 animate-fade-in">
               <a 
