@@ -83,7 +83,7 @@ const About = () => {
               </p>
               <div className="flex gap-4">
                 <a 
-                  href="https://instagram.com" 
+                  href="https://www.instagram.com/aslipolitik?igsh=MTRwM2I3ems0ZG40NQ==" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-background rounded-lg hover:shadow-md transition-all"
