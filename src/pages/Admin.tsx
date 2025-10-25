@@ -19,7 +19,7 @@ const POSTS_PER_PAGE = 10;
 
 // Replace this with your Google Apps Script Web App URL
 // Get it from: Extensions → Apps Script → Deploy → Web app URL
-const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycH1uVUSg36HCKNdesFoAbajkhsHZNQ_l2AK2HMDcO8qCP91kmC9fhVFEtxUroGAveWQ/exec";
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwH1XBaUSbCaFk-ZyaA4qmJBSEh56Nw_Fq2fHvFrArbG36wp0qAHRlekCBo-vfnvRxew/exec";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
