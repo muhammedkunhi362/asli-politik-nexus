@@ -29,7 +29,7 @@ const Subscribe = () => {
 
     try {
       // Replace with your Google Apps Script Web App URL
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbwGSxB9smjH1RMdF2MyfYW9Br9e3AW7Ki7l1gzM1ARDAVKVStIezyfMvlMqZhCGpwfS/exec';
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbyV7hSu-4Oj7en6cZngC6sdRnzTsowMJVjVmPEqJnUnq6TPIB-Xrz__DC6N_sqMBxjo/exec';
       
       const response = await fetch(scriptURL, {
         method: 'POST',
