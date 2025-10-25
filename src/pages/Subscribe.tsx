@@ -8,11 +8,17 @@ import { toast } from 'sonner';
 import { CheckCircle2, Mail, TrendingUp, Globe, Users } from 'lucide-react';
 
 const Subscribe = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!name || name.trim().length < 2) {
+      toast.error('Please enter your name');
+      return;
+    }
     
     if (!email || !email.includes('@')) {
       toast.error('Please enter a valid email address');
@@ -32,12 +38,14 @@ const Subscribe = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: name,
           email: email,
           timestamp: new Date().toISOString(),
         }),
       });
 
       toast.success('Successfully subscribed! Welcome to Asli Politik!');
+      setName('');
       setEmail('');
     } catch (error) {
       console.error('Error:', error);
@@ -84,6 +92,22 @@ const Subscribe = () => {
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium mb-2">
+                      Full Name
+                    </label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Your name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full bg-background border-2 border-input focus:border-accent focus:ring-2 focus:ring-accent/20 rounded-lg px-4 py-3 text-base"
+                      disabled={isSubmitting}
+                      required
+                    />
+                  </div>
+
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium mb-2">
                       Email Address
