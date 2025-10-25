@@ -131,7 +131,7 @@ const Admin = () => {
       toast.success("Post created successfully!");
       
       // Send notification to subscribers via Google Apps Script
-      if (GOOGLE_APPS_SCRIPT_URL.includes('AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg')) {
+      if (GOOGLE_APPS_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg/exec')) {
         toast.info("⚠️ Configure Google Apps Script URL to send notifications");
       } else {
         try {
@@ -303,7 +303,7 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {GOOGLE_APPS_SCRIPT_URL.includes('AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg') && (
+        {GOOGLE_APPS_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg/exec') && (
           <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded">
             <p className="font-semibold">⚠️ Setup Required:</p>
             <p className="text-sm mt-1">
