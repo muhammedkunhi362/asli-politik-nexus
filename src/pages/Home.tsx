@@ -81,7 +81,7 @@ const Home = () => {
             <div className="flex justify-center mt-8 animate-fade-in">
               <Button
                 onClick={() => navigate('/subscribe')}
-                className="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-6 rounded-lg text-lg transition-all hover:shadow-lg hover:scale-105"
+                className="bg-transparent hover:bg-black/5 text-black font-bold px-8 py-6 rounded-lg text-lg border-4 border-black transition-all hover:shadow-lg hover:scale-105"
               >
                 Subscribe for Free
               </Button>
