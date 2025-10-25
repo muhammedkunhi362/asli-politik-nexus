@@ -54,7 +54,7 @@ const Home = () => {
             </p>
             <div className="flex items-center gap-4 mt-3 animate-fade-in">
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/aslipolitik?igsh=MTRwM2I3ems0ZG40NQ==" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg transition-all hover:scale-110"
