@@ -1,3 +1,4 @@
+// src/pages/Home.tsx
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PostCard } from "@/components/PostCard";
 import { Pagination } from "@/components/Pagination";
+import { SubscriptionForm } from "@/components/SubscriptionForm";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const POSTS_PER_PAGE = 9;
@@ -72,6 +74,9 @@ const Home = () => {
                 </svg>
               </a>
             </div>
+            
+            {/* Subscription Form */}
+            <SubscriptionForm />
           </div>
         </section>
 
