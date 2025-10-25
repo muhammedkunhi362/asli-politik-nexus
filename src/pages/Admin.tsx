@@ -19,7 +19,7 @@ const POSTS_PER_PAGE = 10;
 
 // Replace this with your Google Apps Script Web App URL
 // Get it from: Extensions → Apps Script → Deploy → Web app URL
-const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg/exec";
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzj7QayY3uSe2Vab2K1o7ocdnGBZcEIbiBuE8AtGbbRydiF6pXI-1w6Mj6wCm__CuK28w/exec";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -33,30 +33,41 @@ const postSchema = z.object({
 
 // Function to send notification via Google Apps Script
 const sendNewPostNotification = async (postData: any) => {
+  console.log('📧 Attempting to send notification...', {
+    url: GOOGLE_APPS_SCRIPT_URL,
+    data: postData
+  });
+
   try {
-    // Note: Using no-cors mode because Google Apps Script doesn't support CORS properly
+    const payload = {
+      title: postData.title,
+      slug: postData.slug,
+      excerpt: postData.excerpt,
+      category: postData.category,
+      author_name: postData.author_name,
+      featured_image: postData.featured_image || '',
+      post_url: `${window.location.origin}/post/${postData.slug}`,
+      published_at: new Date().toISOString(),
+    };
+
+    console.log('📦 Payload:', payload);
+
+    // Try with no-cors first (required for Google Apps Script)
     const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // Important for Google Apps Script
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        title: postData.title,
-        slug: postData.slug,
-        excerpt: postData.excerpt,
-        category: postData.category,
-        author_name: postData.author_name,
-        featured_image: postData.featured_image || '',
-        post_url: `${window.location.origin}/post/${postData.slug}`,
-        published_at: new Date().toISOString(),
-      }),
+      body: JSON.stringify(payload),
     });
 
-    // With no-cors mode, we can't read the response, so we assume success
+    console.log('✅ Request sent (no-cors mode - cannot read response)');
+    
+    // With no-cors, we assume success if no error is thrown
     return { success: true };
   } catch (error) {
-    console.error('Error sending notification:', error);
+    console.error('❌ Error sending notification:', error);
     throw error;
   }
 };
@@ -130,18 +141,18 @@ const Admin = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
       toast.success("Post created successfully!");
       
-      // Send notification to subscribers via Google Apps Script
-      if (GOOGLE_APPS_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg/exec')) {
-        toast.info("⚠️ Configure Google Apps Script URL to send notifications");
-      } else {
-        try {
-          toast.loading("Sending notifications to subscribers...");
-          await sendNewPostNotification(postData);
-          toast.success("✅ Notifications sent to all subscribers!");
-        } catch (error) {
-          toast.error("Post created but failed to send notifications. Check console for details.");
-          console.error('Notification error:', error);
-        }
+      // Send notification to subscribers
+      try {
+        console.log('🚀 Triggering notification send...');
+        const loadingToast = toast.loading("Sending notifications to subscribers...");
+        
+        await sendNewPostNotification(postData);
+        
+        toast.dismiss(loadingToast);
+        toast.success("✅ Notification request sent! (Check browser console for details)");
+      } catch (error) {
+        console.error('❌ Notification error:', error);
+        toast.error("Post created but failed to send notifications. Check console for details.");
       }
       
       setIsDialogOpen(false);
@@ -303,22 +314,15 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {GOOGLE_APPS_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg/exec') && (
-          <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded">
-            <p className="font-semibold">⚠️ Setup Required:</p>
-            <p className="text-sm mt-1">
-              Configure your Google Apps Script URL in Admin.tsx to enable email notifications.
-              <a 
-                href="https://script.google.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="ml-1 underline hover:text-yellow-900"
-              >
-                Go to Apps Script →
-              </a>
-            </p>
-          </div>
-        )}
+        <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded">
+          <p className="font-semibold">📧 Email Notifications Info:</p>
+          <p className="text-sm mt-1">
+            Google Apps Script URL is configured. Check the browser console (F12) for detailed notification logs.
+          </p>
+          <p className="text-xs mt-2 font-mono bg-blue-100 p-2 rounded">
+            {GOOGLE_APPS_SCRIPT_URL}
+          </p>
+        </div>
         
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold">Manage Posts</h2>
