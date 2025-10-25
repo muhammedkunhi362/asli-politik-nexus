@@ -1,18 +1,20 @@
 // src/pages/Home.tsx
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PostCard } from "@/components/PostCard";
 import { Pagination } from "@/components/Pagination";
-import { SubscriptionForm } from "@/components/SubscriptionForm";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 const POSTS_PER_PAGE = 9;
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
 
   const { data: postsData, isLoading } = useQuery({
     queryKey: ["posts", currentPage],
@@ -75,8 +77,15 @@ const Home = () => {
               </a>
             </div>
             
-            {/* Subscription Form */}
-            <SubscriptionForm />
+            {/* Subscribe Button */}
+            <div className="flex justify-center mt-8 animate-fade-in">
+              <Button
+                onClick={() => navigate('/subscribe')}
+                className="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-6 rounded-lg text-lg transition-all hover:shadow-lg hover:scale-105"
+              >
+                Subscribe for Free
+              </Button>
+            </div>
           </div>
         </section>
 
