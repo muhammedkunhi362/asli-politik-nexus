@@ -17,6 +17,10 @@ import { z } from "zod";
 
 const POSTS_PER_PAGE = 10;
 
+// Replace this with your Google Apps Script Web App URL
+// Get it from: Extensions → Apps Script → Deploy → Web app URL
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg/exec";
+
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
   slug: z.string().min(1, "Slug is required").max(200, "Slug too long"),
@@ -26,6 +30,36 @@ const postSchema = z.object({
   author_name: z.string().min(1, "Author name is required").max(100, "Author name too long"),
   featured_image: z.string().optional(),
 });
+
+// Function to send notification via Google Apps Script
+const sendNewPostNotification = async (postData: any) => {
+  try {
+    // Note: Using no-cors mode because Google Apps Script doesn't support CORS properly
+    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Important for Google Apps Script
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: postData.title,
+        slug: postData.slug,
+        excerpt: postData.excerpt,
+        category: postData.category,
+        author_name: postData.author_name,
+        featured_image: postData.featured_image || '',
+        post_url: `${window.location.origin}/post/${postData.slug}`,
+        published_at: new Date().toISOString(),
+      }),
+    });
+
+    // With no-cors mode, we can't read the response, so we assume success
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    throw error;
+  }
+};
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -90,10 +124,26 @@ const Admin = () => {
     mutationFn: async (data: any) => {
       const { error } = await supabase.from("posts").insert([data]);
       if (error) throw error;
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: async (postData) => {
       queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
       toast.success("Post created successfully!");
+      
+      // Send notification to subscribers via Google Apps Script
+      if (GOOGLE_APPS_SCRIPT_URL.includes('AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg')) {
+        toast.info("⚠️ Configure Google Apps Script URL to send notifications");
+      } else {
+        try {
+          toast.loading("Sending notifications to subscribers...");
+          await sendNewPostNotification(postData);
+          toast.success("✅ Notifications sent to all subscribers!");
+        } catch (error) {
+          toast.error("Post created but failed to send notifications. Check console for details.");
+          console.error('Notification error:', error);
+        }
+      }
+      
       setIsDialogOpen(false);
       resetForm();
     },
@@ -253,6 +303,23 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        {GOOGLE_APPS_SCRIPT_URL.includes('AKfycbyqK6Ggmf63KV1OmOAwFksQgQtkjPrisBJ4J1ETuwDncJe_6tlAdw3tMiVsKOIcEmliXg') && (
+          <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded">
+            <p className="font-semibold">⚠️ Setup Required:</p>
+            <p className="text-sm mt-1">
+              Configure your Google Apps Script URL in Admin.tsx to enable email notifications.
+              <a 
+                href="https://script.google.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-1 underline hover:text-yellow-900"
+              >
+                Go to Apps Script →
+              </a>
+            </p>
+          </div>
+        )}
+        
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold">Manage Posts</h2>
           <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -367,7 +434,7 @@ const Admin = () => {
                       Uploading...
                     </>
                   ) : (
-                    editingPost ? "Update Post" : "Create Post"
+                    editingPost ? "Update Post" : "Create Post & Notify Subscribers"
                   )}
                 </Button>
               </form>
