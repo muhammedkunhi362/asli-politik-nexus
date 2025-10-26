@@ -10,12 +10,24 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border">
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-black tracking-tight" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.05em' }}>
-              <span style={{ color: '#dc2626' }}>A</span>
-              <span style={{ color: '#dc2626', textTransform: 'lowercase' }}>sli</span>
+          <Link to="/" className="flex items-center gap-0">
+            <span className="text-3xl font-black" style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '-0.02em' }}>
+              <span style={{ color: '#dc2626' }}>Asli</span>
               <span style={{ color: '#000000' }}>P</span>
-              <span style={{ color: '#000000', textTransform: 'lowercase' }}>olitik</span>
+            </span>
+            <svg className="w-8 h-8 -mx-0.5" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '2px' }}>
+              <circle cx="50" cy="50" r="48" fill="#000000"/>
+              <circle cx="50" cy="50" r="45" fill="white"/>
+              <g stroke="#000000" strokeWidth="2" fill="none">
+                <ellipse cx="50" cy="50" rx="28" ry="45"/>
+                <ellipse cx="50" cy="50" rx="45" ry="28"/>
+                <line x1="5" y1="50" x2="95" y2="50"/>
+                <path d="M 50 5 Q 35 50 50 95" fill="none"/>
+                <path d="M 50 5 Q 65 50 50 95" fill="none"/>
+              </g>
+            </svg>
+            <span className="text-3xl font-black" style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '-0.02em', color: '#000000' }}>
+              litik
             </span>
           </Link>
 
