@@ -10,12 +10,12 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border">
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-0">
+          <Link to="/" className="flex items-center">
             <span className="text-3xl font-black" style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '-0.02em' }}>
               <span style={{ color: '#dc2626' }}>Asli</span>
               <span style={{ color: '#000000' }}>P</span>
             </span>
-            <svg className="w-6 h-6 mx-0.5" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '4px' }}>
+            <svg className="w-6 h-6" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '4px', marginLeft: '-2px', marginRight: '-2px' }}>
               <circle cx="50" cy="50" r="48" fill="#000000"/>
               <circle cx="50" cy="50" r="45" fill="white"/>
               <g stroke="#000000" strokeWidth="3" fill="none">
