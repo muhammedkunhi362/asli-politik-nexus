@@ -11,14 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Pagination } from "@/components/Pagination";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit, Trash2, Upload, Mail, CheckCircle } from "lucide-react";
+import { LogOut, Plus, Edit, Trash2, Upload } from "lucide-react";
 import { getAllCategories, getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { z } from "zod";
 
 const POSTS_PER_PAGE = 10;
-
-// IMPORTANT: Replace this with your actual Apps Script Web App URL
-const APPS_SCRIPT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyLzZ5BmyFsEuhXD8ar1Zq3C12TNE3ZelLbZ2I8SPq9ifFZn9KLnk8LpjX5WLoH9CTEmQ/exec";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -40,7 +37,6 @@ const Admin = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
-  const [sendEmail, setSendEmail] = useState(true); // New state for email checkbox
   
   const [formData, setFormData] = useState({
     title: "",
@@ -90,67 +86,15 @@ const Admin = () => {
     enabled: !!user,
   });
 
-  // Function to send email notification via Apps Script webhook
-  const sendEmailNotification = async (postData: any) => {
-    try {
-      const response = await fetch(APPS_SCRIPT_WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: postData.title,
-          slug: postData.slug,
-          excerpt: postData.excerpt,
-          featured_image: postData.featured_image || "",
-          author_name: postData.author_name,
-          category: postData.category,
-        }),
-      });
-
-      const result = await response.json();
-      
-      if (result.success) {
-        toast.success(
-          `Post created successfully! 📧 ${result.result.success} email(s) sent to subscribers.`,
-          { duration: 5000 }
-        );
-        return result;
-      } else {
-        toast.warning('Post created but email notification failed', {
-          description: result.error || 'Unknown error occurred',
-        });
-        console.error('Email notification error:', result.error);
-        return null;
-      }
-    } catch (error) {
-      console.error('Failed to send email notification:', error);
-      toast.warning('Post created but email notification failed', {
-        description: 'Could not connect to email service',
-      });
-      return null;
-    }
-  };
-
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
       const { error } = await supabase.from("posts").insert([data]);
       if (error) throw error;
       return data;
     },
-    onSuccess: async (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
-      
-      // Send email notification to subscribers if checkbox is checked
-      if (sendEmail) {
-        toast.info("Sending email notifications to subscribers...", {
-          icon: <Mail className="h-4 w-4" />,
-        });
-        await sendEmailNotification(data);
-      } else {
-        toast.success("Post created successfully!");
-      }
-      
+      toast.success("Post created successfully!");
       setIsDialogOpen(false);
       resetForm();
     },
@@ -207,7 +151,6 @@ const Admin = () => {
     setEditingPost(null);
     setImageFile(null);
     setImagePreview("");
-    setSendEmail(true); // Reset email checkbox
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -419,26 +362,6 @@ const Admin = () => {
                   </div>
                 </div>
                 
-                {/* Email Notification Checkbox - Only shown when creating new post */}
-                {!editingPost && (
-                  <div className="flex items-center space-x-2 p-4 bg-muted/50 rounded-lg border">
-                    <input
-                      type="checkbox"
-                      id="sendEmail"
-                      checked={sendEmail}
-                      onChange={(e) => setSendEmail(e.target.checked)}
-                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                    <Label 
-                      htmlFor="sendEmail" 
-                      className="flex items-center gap-2 cursor-pointer font-normal"
-                    >
-                      <Mail className="h-4 w-4" />
-                      Send email notification to all subscribers
-                    </Label>
-                  </div>
-                )}
-                
                 <Button type="submit" className="w-full" disabled={isUploading}>
                   {isUploading ? (
                     <>
@@ -448,10 +371,7 @@ const Admin = () => {
                   ) : editingPost ? (
                     "Update Post"
                   ) : (
-                    <>
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      Create Post {sendEmail && "& Notify Subscribers"}
-                    </>
+                    "Create Post"
                   )}
                 </Button>
               </form>
