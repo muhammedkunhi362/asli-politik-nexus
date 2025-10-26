@@ -10,7 +10,7 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border">
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center">
+<Link to="/" className="flex items-center">
             <span className="text-3xl font-black" style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '-0.02em' }}>
               <span style={{ color: '#dc2626' }}>Asli</span>
               <span style={{ color: '#000000' }}>P</span>
