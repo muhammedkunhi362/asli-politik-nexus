@@ -6,10 +6,26 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Anton', 'Impact', 'Bebas Neue', 'Arial Black', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <Link to="/" className="flex items-center">
+            <span className="text-3xl font-black" style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '-0.02em' }}>
               <span style={{ color: '#dc2626' }}>Asli</span>
-              <span style={{ color: '#000000' }}>Politik</span>
+              <span style={{ color: '#000000' }}>P</span>
             </span>
+            <svg className="w-6 h-6" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '4px', marginLeft: '-2px', marginRight: '-2px' }}>
+              <circle cx="50" cy="50" r="48" fill="#000000"/>
+              <circle cx="50" cy="50" r="45" fill="white"/>
+              <g stroke="#000000" strokeWidth="3" fill="none">
+                <ellipse cx="50" cy="50" rx="28" ry="45"/>
+                <ellipse cx="50" cy="50" rx="45" ry="28"/>
+                <line x1="5" y1="50" x2="95" y2="50"/>
+                <path d="M 50 5 Q 35 50 50 95" fill="none"/>
+                <path d="M 50 5 Q 65 50 50 95" fill="none"/>
+              </g>
+            </svg>
+            <span className="text-3xl font-black" style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '-0.02em', color: '#000000' }}>
+              litik
+            </span>
+          </Link>
             <p className="text-sm text-muted-foreground mt-2">
               Insightful political analysis and geopolitical commentary.
             </p>
