@@ -11,7 +11,7 @@ export const Footer = () => {
               <span style={{ color: '#dc2626' }}>Asli</span>
               <span style={{ color: '#000000' }}>P</span>
             </span>
-            <svg className="w-6 h-6" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '4px', marginLeft: '-2px', marginRight: '-2px' }}>
+            <svg className="w-5 h-5" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '4px', marginLeft: '-1px', marginRight: '-1px' }}>
               <circle cx="50" cy="50" r="48" fill="#000000"/>
               <circle cx="50" cy="50" r="45" fill="white"/>
               <g stroke="#000000" strokeWidth="3" fill="none">
