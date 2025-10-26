@@ -14,63 +14,6 @@ import { toast } from "sonner";
 import { LogOut, Plus, Edit, Trash2, Upload } from "lucide-react";
 import { getAllCategories, getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { z } from "zod";
-// Add this to your Admin.tsx file
-
-// At the top of your file, add the webhook URL constant
-const APPS_SCRIPT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxmmG0tpc42eLwLoDz4WjoB6V1P4r_LZMPO9Ud0zuTkpV_11Py1F6Jzw0sD8mmSD8omPQ/exec";
-
-// Add this function to send webhook notification
-const sendEmailNotification = async (postData: any) => {
-  try {
-    const response = await fetch(APPS_SCRIPT_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: postData.title,
-        slug: postData.slug,
-        excerpt: postData.excerpt,
-        featured_image: postData.featured_image || "",
-        author_name: postData.author_name,
-        category: postData.category,
-      }),
-    });
-
-    const result = await response.json();
-    
-    if (result.success) {
-      toast.success(`Post created and ${result.result.success} emails sent!`);
-    } else {
-      toast.warning('Post created but email notification failed');
-      console.error('Email notification error:', result.error);
-    }
-  } catch (error) {
-    console.error('Failed to send email notification:', error);
-    toast.warning('Post created but email notification failed');
-  }
-};
-
-// Update your createMutation to include email notification
-const createMutation = useMutation({
-  mutationFn: async (data: any) => {
-    const { error } = await supabase.from("posts").insert([data]);
-    if (error) throw error;
-    return data;
-  },
-  onSuccess: async (data) => {
-    queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
-    
-    // Send email notification to subscribers
-    await sendEmailNotification(data);
-    
-    setIsDialogOpen(false);
-    resetForm();
-  },
-  onError: (error: any) => {
-    toast.error(error.message || "Failed to create post");
-  },
-});
 
 const POSTS_PER_PAGE = 10;
 
