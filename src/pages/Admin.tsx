@@ -18,7 +18,7 @@ import { z } from "zod";
 const POSTS_PER_PAGE = 10;
 
 // IMPORTANT: Replace this with your actual Apps Script Web App URL
-const APPS_SCRIPT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwxNPd8EkQmaXdQmF4BCBMCYuDVhp2Lt8c-U7twXT3HNYRXZ9E6KNWs_N7HWTTo5KbDWg/exec";
+const APPS_SCRIPT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyLzZ5BmyFsEuhXD8ar1Zq3C12TNE3ZelLbZ2I8SPq9ifFZn9KLnk8LpjX5WLoH9CTEmQ/exec";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
