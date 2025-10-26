@@ -15,10 +15,10 @@ export const Header = () => {
               <span style={{ color: '#dc2626' }}>Asli</span>
               <span style={{ color: '#000000' }}>P</span>
             </span>
-            <svg className="w-8 h-8 -mx-0.5" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '2px' }}>
+            <svg className="w-6 h-6 mx-0.5" viewBox="0 0 100 100" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '4px' }}>
               <circle cx="50" cy="50" r="48" fill="#000000"/>
               <circle cx="50" cy="50" r="45" fill="white"/>
-              <g stroke="#000000" strokeWidth="2" fill="none">
+              <g stroke="#000000" strokeWidth="3" fill="none">
                 <ellipse cx="50" cy="50" rx="28" ry="45"/>
                 <ellipse cx="50" cy="50" rx="45" ry="28"/>
                 <line x1="5" y1="50" x2="95" y2="50"/>
