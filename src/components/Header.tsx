@@ -12,8 +12,8 @@ export const Header = () => {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-black tracking-tight" style={{ fontFamily: "Montserrat, letterSpacing: '0.05em' }}>
-              <span style={{ color: '#dc2626' }}>ASLI</span>
-              <span style={{ color: '#000000' }}>POLITIK</span>
+              <span style={{ color: '#dc2626' }}>Asli</span>
+              <span style={{ color: '#000000' }}>Politik</span>
             </span>
           </Link>
 
