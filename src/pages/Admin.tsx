@@ -15,6 +15,39 @@ import { LogOut, Plus, Edit, Trash2, Upload, Home } from "lucide-react";
 import { getAllCategories, getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { z } from "zod";
 
+const sendEmailNotification = async (postData: any) => {
+  try {
+    // Your n8n webhook URL
+    const N8N_WEBHOOK_URL = "https://grumpy-houses-smile.loca.lt/webhook-test/blog-notification";
+    
+    const response = await fetch(N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: postData.title,
+        slug: postData.slug,
+        excerpt: postData.excerpt,
+        featured_image: postData.featured_image || "",
+        author_name: postData.author_name,
+        category: postData.category,
+      }),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      toast.success('Post created and emails sent to subscribers!', {
+        duration: 5000
+      });
+    } else {
+      toast.warning('Post created but email notification failed');
+    }
+  } catch (error) {
+    console.error('Failed to send email notification:', error);
+    toast.warning('Post created but email notification failed');
+  }
+};
 
 
 const POSTS_PER_PAGE = 10;
