@@ -18,7 +18,7 @@ import { z } from "zod";
 const sendEmailNotification = async (postData: any) => {
   try {
     // Your n8n webhook URL
-    const N8N_WEBHOOK_URL = "https://tasty-spies-unite.loca.lt/webhook-test/blog-notification";
+    const N8N_WEBHOOK_URL = "https://n8nblog.loca.lt/webhook-test/blog-notification";
     
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
