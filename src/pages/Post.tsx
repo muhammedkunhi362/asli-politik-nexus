@@ -10,7 +10,6 @@ import { getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { format } from "date-fns";
 import { useEffect } from "react";
 
-
 const Post = () => {
   const { slug } = useParams<{ slug: string }>();
 
