@@ -17,8 +17,11 @@ import { z } from "zod";
 
 const sendEmailNotification = async (postData: any) => {
   try {
-    // Your n8n webhook URL
+    // Your n8n webhook URL (Cloudflare Tunnel)
     const N8N_WEBHOOK_URL = "https://administration-schemes-llc-price.trycloudflare.com/webhook-test/blog-notification";
+    
+    console.log('Sending notification to:', N8N_WEBHOOK_URL);
+    console.log('Post data:', postData);
     
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
@@ -35,17 +38,28 @@ const sendEmailNotification = async (postData: any) => {
       }),
     });
 
+    console.log('Response status:', response.status);
+
     if (response.ok) {
       const result = await response.json();
+      console.log('Response data:', result);
+      
       toast.success('Post created and emails sent to subscribers!', {
-        duration: 5000
+        duration: 5000,
+        description: `Sent to ${result.subscriberCount || 'all'} subscribers`
       });
     } else {
-      toast.warning('Post created but email notification failed');
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      toast.warning('Post created but email notification failed', {
+        description: 'Check console for details'
+      });
     }
   } catch (error) {
     console.error('Failed to send email notification:', error);
-    toast.warning('Post created but email notification failed');
+    toast.warning('Post created but email notification failed', {
+      description: error instanceof Error ? error.message : 'Network error'
+    });
   }
 };
 
