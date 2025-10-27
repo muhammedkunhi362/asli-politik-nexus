@@ -18,7 +18,7 @@ import { z } from "zod";
 const sendEmailNotification = async (postData: any) => {
   try {
     // Your n8n webhook URL
-    const N8N_WEBHOOK_URL = "http://localhost:5680/webhook/blog-notification";
+    const N8N_WEBHOOK_URL = "https://kind-shrimps-grab.loca.lt/webhook/blog-notification";
     
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
