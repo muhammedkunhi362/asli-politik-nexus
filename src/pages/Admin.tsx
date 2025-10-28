@@ -48,34 +48,54 @@ const Admin = () => {
     author_name: "Admin",
     featured_image: "",
   });
+// Replace your sendEmailNotification function with this debug version
 const sendEmailNotification = async (postData: any) => {
+  console.log('🔔 sendEmailNotification CALLED');
+  console.log('📦 Post data received:', JSON.stringify(postData, null, 2));
+  
   try {
-    // Your n8n webhook URL (Cloudflare Tunnel)
     const N8N_WEBHOOK_URL = "https://calorifacient-chan-tearless.ngrok-free.dev/webhook/blog-notification";
     
-    console.log('Sending notification to:', N8N_WEBHOOK_URL);
-    console.log('Post data:', postData);
+    console.log('🌐 Webhook URL:', N8N_WEBHOOK_URL);
+    
+    const payload = {
+      title: postData.title,
+      slug: postData.slug,
+      excerpt: postData.excerpt,
+      content: postData.content, // ✅ Added this!
+      featured_image: postData.featured_image || "",
+      author_name: postData.author_name,
+      category: postData.category,
+    };
+    
+    console.log('📤 Sending payload:', JSON.stringify(payload, null, 2));
+    console.log('⏰ Request initiated at:', new Date().toISOString());
     
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
       },
-      body: JSON.stringify({
-        title: postData.title,
-        slug: postData.slug,
-        excerpt: postData.excerpt,
-        featured_image: postData.featured_image || "",
-        author_name: postData.author_name,
-        category: postData.category,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    console.log('Response status:', response.status);
+    console.log('📊 Response status:', response.status);
+    console.log('📊 Response statusText:', response.statusText);
+    console.log('📊 Response headers:', Object.fromEntries(response.headers.entries()));
 
     if (response.ok) {
-      const result = await response.json();
-      console.log('Response data:', result);
+      let result;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+        console.log('✅ Response JSON:', JSON.stringify(result, null, 2));
+      } else {
+        const text = await response.text();
+        console.log('✅ Response text:', text);
+        result = { message: text };
+      }
       
       toast.success('Post created and emails sent to subscribers!', {
         duration: 5000,
@@ -83,18 +103,25 @@ const sendEmailNotification = async (postData: any) => {
       });
     } else {
       const errorText = await response.text();
-      console.error('Error response:', errorText);
+      console.error('❌ Error response status:', response.status);
+      console.error('❌ Error response:', errorText);
+      
       toast.warning('Post created but email notification failed', {
-        description: 'Check console for details'
+        description: `Status: ${response.status}. Check console for details`
       });
     }
   } catch (error) {
-    console.error('Failed to send email notification:', error);
+    console.error('💥 EXCEPTION in sendEmailNotification:', error);
+    console.error('💥 Error type:', error?.constructor?.name);
+    console.error('💥 Error message:', error instanceof Error ? error.message : String(error));
+    console.error('💥 Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    
     toast.warning('Post created but email notification failed', {
       description: error instanceof Error ? error.message : 'Network error'
     });
   }
 };
+  
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
@@ -134,24 +161,38 @@ const sendEmailNotification = async (postData: any) => {
   });
 
   const createMutation = useMutation({
-    mutationFn: async (data: any) => {
-      const { error } = await supabase.from("posts").insert([data]);
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: async (data: any) => {
-  queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
-  toast.success("Post created successfully!");
-  setIsDialogOpen(false);
-  resetForm();
+  mutationFn: async (data: any) => {
+    console.log('🔨 createMutation.mutationFn called with:', data);
+    const { error } = await supabase.from("posts").insert([data]);
+    if (error) {
+      console.error('❌ Supabase insert error:', error);
+      throw error;
+    }
+    console.log('✅ Post inserted successfully');
+    return data;
+  },
+  onSuccess: async (data: any) => {
+    console.log('🎉 createMutation.onSuccess called');
+    console.log('📝 Data passed to onSuccess:', data);
+    
+    queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
+    toast.success("Post created successfully!");
+    setIsDialogOpen(false);
+    resetForm();
 
-  // ✅ Trigger email notification workflow
-  await sendEmailNotification(data);
-},  // ✅ Only one comma,
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to create post");
-    },
-  });
+    console.log('🚀 About to call sendEmailNotification...');
+    try {
+      await sendEmailNotification(data);
+      console.log('✅ sendEmailNotification completed');
+    } catch (err) {
+      console.error('❌ sendEmailNotification threw error:', err);
+    }
+  },
+  onError: (error: any) => {
+    console.error('❌ createMutation.onError:', error);
+    toast.error(error.message || "Failed to create post");
+  },
+});
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: any }) => {
