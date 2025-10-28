@@ -15,6 +15,39 @@ import { LogOut, Plus, Edit, Trash2, Upload, Home } from "lucide-react";
 import { getAllCategories, getCategoryLabel, type CategoryValue } from "@/lib/categories";
 import { z } from "zod";
 
+
+const POSTS_PER_PAGE = 10;
+
+const postSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200, "Title too long"),
+  slug: z.string().min(1, "Slug is required").max(200, "Slug too long"),
+  excerpt: z.string().min(1, "Excerpt is required").max(500, "Excerpt too long"),
+  content: z.string().min(1, "Content is required"),
+  category: z.string(),
+  author_name: z.string().min(1, "Author name is required").max(100, "Author name too long"),
+  featured_image: z.string().optional(),
+});
+
+const Admin = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [user, setUser] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<any>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    title: "",
+    slug: "",
+    excerpt: "",
+    content: "",
+    category: "",
+    author_name: "Admin",
+    featured_image: "",
+  });
 const sendEmailNotification = async (postData: any) => {
   try {
     // Your n8n webhook URL (Cloudflare Tunnel)
@@ -62,41 +95,6 @@ const sendEmailNotification = async (postData: any) => {
     });
   }
 };
-
-
-const POSTS_PER_PAGE = 10;
-
-const postSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  slug: z.string().min(1, "Slug is required").max(200, "Slug too long"),
-  excerpt: z.string().min(1, "Excerpt is required").max(500, "Excerpt too long"),
-  content: z.string().min(1, "Content is required"),
-  category: z.string(),
-  author_name: z.string().min(1, "Author name is required").max(100, "Author name too long"),
-  featured_image: z.string().optional(),
-});
-
-const Admin = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [user, setUser] = useState<any>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<any>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
-  const [isUploading, setIsUploading] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    title: "",
-    slug: "",
-    excerpt: "",
-    content: "",
-    category: "",
-    author_name: "Admin",
-    featured_image: "",
-  });
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
