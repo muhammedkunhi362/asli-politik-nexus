@@ -49,6 +49,8 @@ const Admin = () => {
     featured_image: "",
   });
 // Replace your sendEmailNotification function with this debug version
+// Replace your sendEmailNotification function with this complete version
+
 const sendEmailNotification = async (postData: any) => {
   console.log('🔔 sendEmailNotification CALLED');
   console.log('📦 Post data received:', JSON.stringify(postData, null, 2));
@@ -58,17 +60,18 @@ const sendEmailNotification = async (postData: any) => {
     
     console.log('🌐 Webhook URL:', N8N_WEBHOOK_URL);
     
+    // ✅ COMPLETE payload with ALL fields
     const payload = {
-      title: postData.title,
-      slug: postData.slug,
-      excerpt: postData.excerpt,
-      content: postData.content, // ✅ Added this!
+      title: postData.title || "Untitled",
+      slug: postData.slug || "",
+      excerpt: postData.excerpt || "",
+      content: postData.content || "",
+      category: postData.category || "general",
+      author_name: postData.author_name || "Admin",
       featured_image: postData.featured_image || "",
-      author_name: postData.author_name,
-      category: postData.category,
     };
     
-    console.log('📤 Sending payload:', JSON.stringify(payload, null, 2));
+    console.log('📤 Sending complete payload:', JSON.stringify(payload, null, 2));
     console.log('⏰ Request initiated at:', new Date().toISOString());
     
     const response = await fetch(N8N_WEBHOOK_URL, {
@@ -82,7 +85,6 @@ const sendEmailNotification = async (postData: any) => {
 
     console.log('📊 Response status:', response.status);
     console.log('📊 Response statusText:', response.statusText);
-    console.log('📊 Response headers:', Object.fromEntries(response.headers.entries()));
 
     if (response.ok) {
       let result;
@@ -99,7 +101,7 @@ const sendEmailNotification = async (postData: any) => {
       
       toast.success('Post created and emails sent to subscribers!', {
         duration: 5000,
-        description: `Sent to ${result.subscriberCount || 'all'} subscribers`
+        description: `Notification sent successfully`
       });
     } else {
       const errorText = await response.text();
@@ -112,9 +114,7 @@ const sendEmailNotification = async (postData: any) => {
     }
   } catch (error) {
     console.error('💥 EXCEPTION in sendEmailNotification:', error);
-    console.error('💥 Error type:', error?.constructor?.name);
     console.error('💥 Error message:', error instanceof Error ? error.message : String(error));
-    console.error('💥 Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     
     toast.warning('Post created but email notification failed', {
       description: error instanceof Error ? error.message : 'Network error'
