@@ -54,7 +54,7 @@ const sendEmailNotification = async (postData: any) => {
   console.log('📦 Post data received:', JSON.stringify(postData, null, 2));
   
   try {
-    const N8N_WEBHOOK_URL = "https://calorifacient-chan-tearless.ngrok-free.dev/webhook/blog-notification";
+    const N8N_WEBHOOK_URL = "https://calorifacient-chan-tearless.ngrok-free.dev/webhook-test/blog-notification";
     
     console.log('🌐 Webhook URL:', N8N_WEBHOOK_URL);
     
