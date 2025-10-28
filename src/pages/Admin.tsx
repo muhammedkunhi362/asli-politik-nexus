@@ -18,7 +18,7 @@ import { z } from "zod";
 const sendEmailNotification = async (postData: any) => {
   try {
     // Your n8n webhook URL (Cloudflare Tunnel)
-    const N8N_WEBHOOK_URL = "https://administration-schemes-llc-price.trycloudflare.com/webhook/blog-notification";
+    const N8N_WEBHOOK_URL = "https://calorifacient-chan-tearless.ngrok-free.dev/webhook/blog-notification";
     
     console.log('Sending notification to:', N8N_WEBHOOK_URL);
     console.log('Post data:', postData);
