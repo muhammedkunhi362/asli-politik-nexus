@@ -148,7 +148,6 @@ const sendEmailNotification = async (postData: any) => {
   // ✅ Trigger email notification workflow
   await sendEmailNotification(data);
 },  // ✅ Only one comma,
-,
     onError: (error: any) => {
       toast.error(error.message || "Failed to create post");
     },
